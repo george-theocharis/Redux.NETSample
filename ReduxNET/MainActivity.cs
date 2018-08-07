@@ -17,6 +17,8 @@ using ReduxNET.Extensions;
 using ReduxNET.ActionCreators;
 using System.Linq;
 using System.Collections.Immutable;
+using System.Threading;
+using System.Reactive.Concurrency;
 
 namespace ReduxNET
 {
@@ -72,6 +74,7 @@ namespace ReduxNET
         private void SetupEventHandlers()
         {
             Observable.FromEventPattern(_fab, "Click")
+                      .Throttle(TimeSpan.FromMilliseconds(200))
                       .Subscribe(e =>
                       {
                           if (_adapter.ItemCount > 0)
@@ -91,18 +94,25 @@ namespace ReduxNET
             App.App.Store
                 .Select(Selectors.Selectors.SearchPosts)
                 .DistinctUntilChanged()
+                .SubscribeOn(TaskPoolScheduler.Default)
+                .ObserveOn(SynchronizationContext.Current)
                 .Subscribe(list => Render(list))
                 .DisposeWith(_disposables);
 
             App.App.Store
-                .DistinctUntilChanged(state => state.PostsState.SelectedPostId)
+                .Select(state => state.PostsState.SelectedPostId)
+                .DistinctUntilChanged()
                 .Skip(1)
-                .Subscribe(state => Render(state.PostsState.SelectedPostId))
+                .SubscribeOn(TaskPoolScheduler.Default)
+                .ObserveOn(SynchronizationContext.Current)
+                .Subscribe(id => Render(id))
                 .DisposeWith(_disposables);
 
             App.App.Store
               .Select(state => state.PostsState.Error)
               .DistinctUntilChanged()
+              .SubscribeOn(TaskPoolScheduler.Default)
+              .ObserveOn(SynchronizationContext.Current)
               .Subscribe(error => Render(error))
               .DisposeWith(_disposables);
         }
