@@ -19,6 +19,7 @@ using System.Linq;
 using System.Collections.Immutable;
 using System.Threading;
 using System.Reactive.Concurrency;
+using System.Collections.Generic;
 
 namespace ReduxNET
 {
@@ -78,7 +79,7 @@ namespace ReduxNET
                       .Subscribe(e =>
                       {
                           if (_adapter.ItemCount > 0)
-                              App.App.Store.Dispatch(new PostsFetched() { Posts = new System.Collections.Generic.List<Post>() });
+                              App.App.Store.Dispatch(PostsActionsCreator.PostsFetched(new List<Post>()));
                           else
                               App.App.Store.Dispatch(PostsActionsCreator.Fetch());
                       })
