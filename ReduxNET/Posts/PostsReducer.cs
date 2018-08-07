@@ -14,7 +14,7 @@ namespace Redux
                     return state.With(Loading: true);
 
                 case PostsFetched result:
-                    return state.With(Loading: false, Posts: ImmutableList.CreateRange(result.Posts));
+                    return state.With(Loading: false, Posts: ImmutableList.CreateRange(result.Posts), Error: string.Empty);
 
                 case PostsFetchFailed error:
                     return state.With(Loading: false, Posts: ImmutableList<Post>.Empty, Error: error.Message);

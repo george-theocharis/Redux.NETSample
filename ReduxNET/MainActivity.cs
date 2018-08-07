@@ -105,9 +105,8 @@ namespace ReduxNET
                 .DisposeWith(_disposables);
 
             App.App.Store
-              .DistinctUntilChanged(state => state.PostsState)
               .Select(state => state.PostsState.Error)
-              .Where(error => !string.IsNullOrEmpty(error))
+              .DistinctUntilChanged()
               .Subscribe(error => Render(error))
               .DisposeWith(_disposables);
         }
@@ -135,13 +134,23 @@ namespace ReduxNET
 
         private void Render(string error)
         {
-            _snackbar = _snackbar ?? Snackbar.Make(_container, error, Snackbar.LengthIndefinite);
-            if (_snackbar.IsShownOrQueued) return;
-            else
+            if(string.IsNullOrEmpty(error))
             {
-                _snackbar.SetText(error);
+                if (_snackbar == null) return;
+                if (_snackbar.IsShownOrQueued) _snackbar.Dismiss();
+                return;
+            }
+
+            try
+            {
+                if (_snackbar == null)
+                    _snackbar = Snackbar.Make(_container, error, Snackbar.LengthIndefinite);
+                else _snackbar.SetText(error);
+
                 _snackbar.Show();
             }
+            catch (Exception e) {
+                Console.WriteLine(e.Message); }
         }
     }
 }
