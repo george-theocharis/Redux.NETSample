@@ -25,10 +25,17 @@ namespace ReduxNET.ActionCreators
             return async (dispatch, getState) =>
             {
                 dispatch(FetchPosts);
+                try
+                {
+                    var response = await App.App.Api.GetPosts();
 
-                var response = await App.App.Api.GetPosts();
+                    dispatch(response.IsSuccessStatusCode ? PostsFetched(response.Content) : PostsFetchFailed(response.StatusCode, response.ReasonPhrase));
+                }
 
-                dispatch(response.IsSuccessStatusCode ? PostsFetched(response.Content) : PostsFetchFailed(response.StatusCode, response.ReasonPhrase));
+                catch(Exception e)
+                {
+                    dispatch(PostsFetchFailed(HttpStatusCode.ExpectationFailed, e.Message));
+                }
             };
         }
     }

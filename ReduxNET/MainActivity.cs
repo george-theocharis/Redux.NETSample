@@ -29,6 +29,7 @@ namespace ReduxNET
         private PostsAdapter _adapter;
 
         private CompositeDisposable _disposables = new CompositeDisposable();
+        private Snackbar _snackbar;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -90,7 +91,15 @@ namespace ReduxNET
                 .Skip(1)
                 .Subscribe(state => Render(state.PostsState.SelectedPostId))
                 .DisposeWith(_disposables);
+
+            App.App.Store
+              .DistinctUntilChanged(state => state.PostsState)
+              .Select(state => state.PostsState.Error)
+              .Where(error => !string.IsNullOrEmpty(error))
+              .Subscribe(error => Render(error))
+              .DisposeWith(_disposables);
         }
+
 
         protected override void OnStop()
         {
@@ -110,6 +119,17 @@ namespace ReduxNET
         private void Render(int selectedPostId)
         {
             StartActivity(new Android.Content.Intent(this, typeof(PostDetailsActivity)));
+        }
+
+        private void Render(string error)
+        {
+            _snackbar = _snackbar ?? Snackbar.Make(_container, error, Snackbar.LengthIndefinite);
+            if (_snackbar.IsShownOrQueued) return;
+            else
+            {
+                _snackbar.SetText(error);
+                _snackbar.Show();
+            }
         }
     }
 }
