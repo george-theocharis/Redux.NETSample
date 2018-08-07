@@ -16,6 +16,8 @@ using Android.Support.Design.Widget;
 using System.Reactive.Disposables;
 using ReduxNET.Extensions;
 using ReduxNET.ActionCreators;
+using System.Linq;
+using System.Collections.Immutable;
 
 namespace ReduxNET
 {
@@ -90,8 +92,9 @@ namespace ReduxNET
         private void SetupSubscriptions()
         {
             App.App.Store
-                .DistinctUntilChanged(state => state.PostsState.Posts)
-                .Subscribe(state => Render(state.PostsState))
+                .Select(Selectors.Selectors.SearchPosts)
+                .DistinctUntilChanged()
+                .Subscribe(list => Render(list))
                 .DisposeWith(_disposables);
 
             App.App.Store
@@ -101,19 +104,20 @@ namespace ReduxNET
                 .DisposeWith(_disposables);
         }
 
+
         protected override void OnStop()
         {
             base.OnStop();
             _disposables.Clear();
         }
 
-        private void Render(PostsState state)
+        private void Render(ImmutableList<Post> list)
         {
             TransitionManager.BeginDelayedTransition(_container);
-            _loading.Visibility = state.Loading ? ViewStates.Visible : ViewStates.Gone;
-            _posts.Visibility = state.Loading ? ViewStates.Gone : ViewStates.Visible;
+            _loading.Visibility = ViewStates.Gone;
+            _posts.Visibility = ViewStates.Visible;
 
-            _adapter.UpdateItems(state.Posts);
+            _adapter.UpdateItems(list);
         }
 
         private void Render(int selectedPostId)

@@ -10,20 +10,22 @@ namespace Redux
             Posts = ImmutableList<Post>.Empty;
         }
 
-        private PostsState(bool loading, ImmutableList<Post> posts, int selectedPostId, string error)
+        private PostsState(bool loading, ImmutableList<Post> posts, int selectedPostId, string searchQuery, string error)
         {
             Posts = posts;
             Loading = loading;
             SelectedPostId = selectedPostId;
+            SearchQuery = searchQuery;
             Error = error;
         }
 
-        public PostsState With(bool? Loading = null, ImmutableList<Post> Posts = null, int? SelectedPostId = null, string Error = null)
+        public PostsState With(bool? Loading = null, ImmutableList<Post> Posts = null, int? SelectedPostId = null, string SearchQuery = null, string Error = null)
            => new PostsState
                (
                    Loading ?? this.Loading,
                    Posts ?? this.Posts,
                    SelectedPostId ?? this.SelectedPostId,
+                   SearchQuery ?? this.SearchQuery,
                    Error ?? this.Error
                );
 
@@ -31,6 +33,7 @@ namespace Redux
         public ImmutableList<Post> Posts { get; }
         public bool Loading { get; }
         public int SelectedPostId { get; }
+        public string SearchQuery { get; }
         public string Error { get; }
     }
 }
