@@ -25,7 +25,7 @@ namespace ReduxNET.PostDetails
             _body = FindViewById<TextView>(Resource.Id.msg);
 
             using (var sub = App.App.Store.DistinctUntilChanged(state => state.PostsState.SelectedPostId)
-                 .Select(x => x.PostsState.Posts.SingleOrDefault(p => p.Id.Equals(x.PostsState.SelectedPostId)))
+                 .Select(Selectors.Selectors.GetPostById)
                  .Select(p => p)
                  .Subscribe(p => Render(p))) { }
         }
