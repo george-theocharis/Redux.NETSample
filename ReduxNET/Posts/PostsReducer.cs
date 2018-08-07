@@ -1,5 +1,7 @@
-﻿using ReduxNET;
-using ReduxNET.Actions;
+﻿using ReduxNET.Actions;
+using ReduxNET.Posts;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace Redux
 {
@@ -13,7 +15,10 @@ namespace Redux
                     return state.With(Loading: true);
 
                 case PostsFetched result:
-                    return state.With(Loading: false, Posts: result.Posts);
+                    return state.With(Loading: false, Posts: ImmutableList.CreateRange(result.Posts));
+
+                case PostsFetchFailed error:
+                    return state.With(Loading: false, Posts: ImmutableList<Post>.Empty, Error: error.Message);
 
                 case PostSelected post:
                     return state.With(SelectedPostId: post.Id);

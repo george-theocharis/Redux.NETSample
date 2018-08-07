@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Reactive.Linq;
 using Android.Support.V7.Widget;
 using Android.Views;
@@ -10,29 +10,22 @@ namespace ReduxNET.Posts
 {
     public class PostsAdapter : RecyclerView.Adapter
     {
-        public List<Post> Items { get; }
+        public ImmutableList<Post> Items { get; private set; }
 
         public PostsAdapter()
-        {
-            Items = new List<Post>();
-        }
+            =>  Items = ImmutableList<Post>.Empty;
 
         public override int ItemCount => Items.Count;
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
-        {
-            var vh = holder as PostViewHolder;
-
-            vh.Bind(Items[position]);
-        }
+         =>   (holder as PostViewHolder)?.Bind(Items[position]);
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
             => new PostViewHolder(LayoutInflater.From(parent.Context).Inflate(Resource.Layout.li_post, parent, false));
 
-        public void UpdateItems(List<Post> posts)
+        public void UpdateItems(ImmutableList<Post> posts)
         {
-            Items.Clear();
-            Items.AddRange(posts);
+            Items = posts;
             NotifyDataSetChanged();
         }
     }
