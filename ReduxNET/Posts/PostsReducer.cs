@@ -1,6 +1,5 @@
 ﻿using ReduxNET.Actions;
 using ReduxNET.Posts;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace Redux
@@ -22,6 +21,9 @@ namespace Redux
 
                 case PostSelected post:
                     return state.With(SelectedPostId: post.Id);
+
+                case SearchPosts search:
+                    return state.With(SearchQuery: search.Query);
             }
 
             return state;
