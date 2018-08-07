@@ -25,6 +25,7 @@ namespace ReduxNET
         private FloatingActionButton _fab;
         private ConstraintLayout _container;
         private ProgressBar _loading;
+        private Android.Widget.SearchView _search;
         private RecyclerView _posts;
         private PostsAdapter _adapter;
 
@@ -43,6 +44,8 @@ namespace ReduxNET
 
             _container = FindViewById<ConstraintLayout>(Resource.Id.container);
             _loading = FindViewById<ProgressBar>(Resource.Id.loading);
+
+            _search = FindViewById<Android.Widget.SearchView>(Resource.Id.search);
 
             _posts = FindViewById<RecyclerView>(Resource.Id.posts);
             _posts.SetLayoutManager(new LinearLayoutManager(ApplicationContext, LinearLayoutManager.Vertical, false));
@@ -75,6 +78,13 @@ namespace ReduxNET
                               App.App.Store.Dispatch(PostsActionsCreator.Fetch());
                       })
                       .DisposeWith(_disposables);
+
+            Observable.FromEventPattern(_search, "QueryTextChange")
+                .Subscribe(e => 
+                {
+                    App.App.Store.Dispatch(PostsActionsCreator.SearchPosts(_search.Query));
+                })
+                .DisposeWith(_disposables);
         }
 
         private void SetupSubscriptions()
@@ -83,7 +93,6 @@ namespace ReduxNET
                 .DistinctUntilChanged(state => state.PostsState.Posts)
                 .Subscribe(state => Render(state.PostsState))
                 .DisposeWith(_disposables);
-
 
             App.App.Store
                 .DistinctUntilChanged(state => state.PostsState.SelectedPostId)

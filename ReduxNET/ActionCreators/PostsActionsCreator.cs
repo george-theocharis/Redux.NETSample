@@ -2,7 +2,6 @@
 using Redux.App;
 using ReduxNET.Actions;
 using ReduxNET.Posts;
-using System;
 using System.Collections.Generic;
 using System.Net;
 
@@ -15,6 +14,11 @@ namespace ReduxNET.ActionCreators
         public static IAction PostsFetched(List<Post> posts) => 
             new PostsFetched {
                 Posts = posts
+            };
+
+        public static IAction SearchPosts(string query) =>
+            new SearchPosts{
+                Query = query
             };
 
         internal static IAction PostsFetchFailed(HttpStatusCode statusCode, string reasonPhrase)
