@@ -4,7 +4,6 @@ using Android.Widget;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Views;
-using Redux;
 using System.Reactive.Linq;
 using Android.Support.V7.Widget;
 using ReduxNET.Posts;
@@ -83,11 +82,8 @@ namespace ReduxNET
                       .DisposeWith(_disposables);
 
             Observable.FromEventPattern(_search, "QueryTextChange")
-                .Subscribe(e => 
-                {
-                    App.App.Store.Dispatch(PostsActionsCreator.SearchPosts(_search.Query));
-                })
-                .DisposeWith(_disposables);
+                      .Subscribe(e => App.App.Store.Dispatch(PostsActionsCreator.SearchPosts(_search.Query)))
+                      .DisposeWith(_disposables);
         }
 
         private void SetupSubscriptions()
@@ -111,7 +107,6 @@ namespace ReduxNET
               .DisposeWith(_disposables);
         }
 
-
         protected override void OnStop()
         {
             base.OnStop();
@@ -128,9 +123,7 @@ namespace ReduxNET
         }
 
         private void Render(int selectedPostId)
-        {
-            StartActivity(new Android.Content.Intent(this, typeof(PostDetailsActivity)));
-        }
+            => StartActivity(new Android.Content.Intent(this, typeof(PostDetailsActivity)));
 
         private void Render(string error)
         {
@@ -140,17 +133,12 @@ namespace ReduxNET
                 if (_snackbar.IsShownOrQueued) _snackbar.Dismiss();
                 return;
             }
+          
+            if (_snackbar == null)
+                _snackbar = Snackbar.Make(_container, error, Snackbar.LengthIndefinite);
+            else _snackbar.SetText(error);
 
-            try
-            {
-                if (_snackbar == null)
-                    _snackbar = Snackbar.Make(_container, error, Snackbar.LengthIndefinite);
-                else _snackbar.SetText(error);
-
-                _snackbar.Show();
-            }
-            catch (Exception e) {
-                Console.WriteLine(e.Message); }
+            _snackbar.Show();
         }
     }
 }
