@@ -15,6 +15,7 @@ using ReduxNET.PostDetails;
 using Android.Support.Design.Widget;
 using System.Reactive.Disposables;
 using ReduxNET.Extensions;
+using ReduxNET.ActionCreators;
 
 namespace ReduxNET
 {
@@ -60,7 +61,7 @@ namespace ReduxNET
         private void Start()
         {
             if (_adapter.ItemCount == 0)
-                App.App.Store.Dispatch(AsyncActionCreators.FetchPosts());
+                App.App.Store.Dispatch(PostsActionsCreator.Fetch());
         }
 
         private void SetupEventHandlers()
@@ -71,7 +72,7 @@ namespace ReduxNET
                           if (_adapter.ItemCount > 0)
                               App.App.Store.Dispatch(new PostsFetched() { Posts = new System.Collections.Generic.List<Post>() });
                           else
-                              App.App.Store.Dispatch(AsyncActionCreators.FetchPosts());
+                              App.App.Store.Dispatch(PostsActionsCreator.Fetch());
                       })
                       .DisposeWith(_disposables);
         }

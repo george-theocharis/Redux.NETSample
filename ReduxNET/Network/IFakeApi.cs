@@ -8,6 +8,6 @@ namespace ReduxNET.Network
     public interface IFakeApi
     {
         [Get("/posts")]
-        Task<List<Post>> GetPosts();
+        Task<ApiResponse<List<Post>>> GetPosts();
     }
 }
