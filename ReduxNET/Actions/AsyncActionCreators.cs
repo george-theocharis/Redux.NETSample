@@ -25,15 +25,6 @@ namespace ReduxNET.Actions
         }
 
         private static async Task<List<Post>> GetPosts()
-        {
-            using (var client = new HttpClient())
-            {
-                var response = await client.GetAsync("https://jsonplaceholder.typicode.com/posts");
-
-                var posts = JsonConvert.DeserializeObject<List<Post>>(await response.Content.ReadAsStringAsync());
-
-                return posts;
-            }
-        }
+            => await App.App.Api.GetPosts();
     }
 }   
