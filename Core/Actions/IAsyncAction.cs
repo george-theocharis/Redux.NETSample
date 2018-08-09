@@ -1,6 +1,6 @@
 ﻿using Redux;
 
-namespace Core.Network
+namespace Core.Actions
 {
     public enum Status
     {

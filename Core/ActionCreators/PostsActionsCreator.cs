@@ -9,7 +9,6 @@ using Core.Actions;
 using Core.Domain.App;
 using Core.Domain.Posts;
 using Core.Extensions;
-using Core.Network;
 
 namespace Core.ActionCreators
 {

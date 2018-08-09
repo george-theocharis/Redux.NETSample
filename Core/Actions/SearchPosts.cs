@@ -2,7 +2,7 @@
 
 namespace Core.Actions
 {
-    public class SearchPosts: IAction
+    internal class SearchPosts: IAction
     {
         public string Query { get; }
 

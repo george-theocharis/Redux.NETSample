@@ -6,7 +6,7 @@ using Core.Network;
 
 namespace Core.Actions
 {
-    public class FetchPosts : IAsyncAction
+    internal class FetchPosts : IAsyncAction
     {
         public FetchPosts(Status status) => Status = status;
 
