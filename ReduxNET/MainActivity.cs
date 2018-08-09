@@ -15,8 +15,6 @@ using System.Reactive.Disposables;
 using ReduxNET.Extensions;
 using ReduxNET.ActionCreators;
 using System.Collections.Immutable;
-using System.Threading;
-using System.Reactive.Concurrency;
 
 namespace ReduxNET
 {
