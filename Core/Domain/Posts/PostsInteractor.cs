@@ -7,6 +7,8 @@ using Core.Extensions;
 
 namespace Core.Domain.Posts
 {
+
+
     public static class PostsInteractor
     {
         public static IObservable<AppState> InitialFetch => App.App.Store

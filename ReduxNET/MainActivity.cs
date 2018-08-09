@@ -20,7 +20,7 @@ using Core.Extensions;
 namespace ReduxNET
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
-    public class MainActivity : AppCompatActivity
+    public class MainActivity : AppCompatActivity, IPostsView
     {
         private FloatingActionButton _fab;
         private ConstraintLayout _container;
@@ -60,11 +60,11 @@ namespace ReduxNET
             SetupEventHandlers();
             SetupSubscriptions();
         }
-        
+
         protected override void OnStop()
         {
             base.OnStop();
-            Disposables.Clear();
+            Unsubscribe();
         }
 
         private void SetupEventHandlers()
@@ -81,33 +81,41 @@ namespace ReduxNET
                 .DisposeWith(Disposables);
         }
 
-        private void SetupSubscriptions()
+        public void InitialFetch() => PostsInteractor
+            .InitialFetch
+            .Subscribe()
+            .DisposeWith(Disposables);
+
+        public void Loading() => PostsInteractor
+            .Loading
+            .Subscribe(Render)
+            .DisposeWith(Disposables);
+
+        public void Posts() => PostsInteractor
+            .Posts
+            .Subscribe(Render)
+            .DisposeWith(Disposables);
+
+        public void SelectedPostId() => PostsInteractor
+            .SelectedPostId
+            .Subscribe(Render)
+            .DisposeWith(Disposables);
+
+        public void Error() => PostsInteractor
+            .Error
+            .Subscribe(Render)
+            .DisposeWith(Disposables);
+
+        public void SetupSubscriptions()
         {
-            PostsInteractor
-                .InitialFetch
-                .Subscribe()
-                .DisposeWith(Disposables);
-
-            PostsInteractor
-                .Loading
-                .Subscribe(Render)
-                .DisposeWith(Disposables);
-
-            PostsInteractor
-                .Posts
-                .Subscribe(Render)
-                .DisposeWith(Disposables);
-
-            PostsInteractor
-                .SelectedPostId
-                .Subscribe(Render)
-                .DisposeWith(Disposables);
-
-            PostsInteractor
-                .Error
-                .Subscribe(Render)
-                .DisposeWith(Disposables);
+            InitialFetch();
+            Loading();
+            Posts();
+            SelectedPostId();
+            Error();
         }
+
+        public void Unsubscribe() => Disposables.Clear();
 
         private void Render(bool loading)
         {
