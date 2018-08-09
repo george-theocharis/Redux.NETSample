@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="App\App.cs" />
     <Compile Include="PostDetails\PostDetailsActivity.cs" />
+    <Compile Include="Posts\PostsView.cs" />
     <Compile Include="Posts\PostsAdapter.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
@@ -140,6 +141,11 @@
       <Project>{eba3c1b5-3863-40ad-b2e9-d0f0e6e37e06}</Project>
       <Name>Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\nav_host.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
