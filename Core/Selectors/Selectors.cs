@@ -1,10 +1,10 @@
-﻿using Redux.App;
-using ReduxNET.Posts;
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using System.Linq;
+using Core.Domain.App;
+using Core.Domain.Posts;
 
-namespace ReduxNET.Selectors
+namespace Core.Selectors
 {
     public static class Selectors
     {

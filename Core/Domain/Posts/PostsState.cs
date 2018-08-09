@@ -1,7 +1,6 @@
-﻿using ReduxNET.Posts;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 
-namespace Redux
+namespace Core.Domain.Posts
 {
     public class PostsState
     {
@@ -22,14 +21,14 @@ namespace Redux
         }
 
         public PostsState With(bool? Loading = null, ImmutableList<Post> Posts = null, int? SelectedPostId = null, string SearchQuery = null, string Error = null)
-           => new PostsState
-               (
-                   Loading ?? this.Loading,
-                   Posts ?? this.Posts,
-                   SelectedPostId ?? this.SelectedPostId,
-                   SearchQuery ?? this.SearchQuery,
-                   Error
-               );
+            => new PostsState
+            (
+                Loading ?? this.Loading,
+                Posts ?? this.Posts,
+                SelectedPostId ?? this.SelectedPostId,
+                SearchQuery ?? this.SearchQuery,
+                Error
+            );
 
 
         public ImmutableList<Post> Posts { get; }

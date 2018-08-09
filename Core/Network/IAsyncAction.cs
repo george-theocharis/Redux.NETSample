@@ -1,6 +1,6 @@
 ﻿using Redux;
 
-namespace ReduxNET.Network
+namespace Core.Network
 {
     public enum Status
     {

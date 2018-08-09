@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Net;
-using ReduxNET.Network;
-using ReduxNET.Posts;
+using Core.Domain.Posts;
+using Core.Network;
 
-namespace ReduxNET.Actions
+namespace Core.Actions
 {
     public class FetchPosts : IAsyncAction
     {

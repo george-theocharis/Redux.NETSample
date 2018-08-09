@@ -12,9 +12,10 @@ using Android.Support.Constraints;
 using ReduxNET.PostDetails;
 using Android.Support.Design.Widget;
 using System.Reactive.Disposables;
-using ReduxNET.Extensions;
-using ReduxNET.ActionCreators;
 using System.Collections.Immutable;
+using Core.ActionCreators;
+using Core.Domain.Posts;
+using Core.Extensions;
 
 namespace ReduxNET
 {
@@ -69,14 +70,14 @@ namespace ReduxNET
         private void SetupEventHandlers()
         {
             Observable.FromEventPattern(_fab, "Click")
-                .Subscribe(e => App.App.Store.Dispatch(PostsActionsCreator.Fetch()))
+                .Subscribe(e => Core.Domain.App.App.Store.Dispatch(PostsActionsCreator.Fetch()))
                 .DisposeWith(Disposables);
 
             Observable.FromEventPattern(_search, "QueryTextChange")
                 .Merge(Observable.FromEventPattern(_search, "QueryTextSubmit"))
                 .Select(e => _search.Query)
                 .DistinctUntilChanged()
-                .Subscribe(e => App.App.Store.Dispatch(PostsActionsCreator.SearchPosts(_search.Query)))
+                .Subscribe(e => Core.Domain.App.App.Store.Dispatch(PostsActionsCreator.SearchPosts(_search.Query)))
                 .DisposeWith(Disposables);
         }
 

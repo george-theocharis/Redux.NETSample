@@ -61,28 +61,12 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionCreators\PostsActionsCreator.cs" />
-    <Compile Include="Actions\FetchPosts.cs" />
-    <Compile Include="Actions\SearchPosts.cs" />
     <Compile Include="App\App.cs" />
-    <Compile Include="App\AppReducer.cs" />
-    <Compile Include="App\AppState.cs" />
-    <Compile Include="Extensions\ObservableExtensions.cs" />
-    <Compile Include="Network\IAsyncAction.cs" />
-    <Compile Include="Network\IFakeApi.cs" />
-    <Compile Include="Extensions\DisposableExtensions.cs" />
     <Compile Include="PostDetails\PostDetailsActivity.cs" />
-    <Compile Include="Actions\PostSelected.cs" />
-    <Compile Include="Posts\Post.cs" />
     <Compile Include="Posts\PostsAdapter.cs" />
-    <Compile Include="Posts\PostsInteractor.cs" />
-    <Compile Include="Posts\PostsReducer.cs" />
-    <Compile Include="Posts\PostsState.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Extensions\StoreExtensions.cs" />
-    <Compile Include="Selectors\Selectors.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -150,6 +134,12 @@
     <AndroidResource Include="Resources\layout\activity_post_details.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{eba3c1b5-3863-40ad-b2e9-d0f0e6e37e06}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

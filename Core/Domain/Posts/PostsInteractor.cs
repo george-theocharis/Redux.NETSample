@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Immutable;
-using System.Reactive;
 using System.Reactive.Linq;
-using Redux.App;
-using ReduxNET.ActionCreators;
-using ReduxNET.Extensions;
+using Core.ActionCreators;
+using Core.Domain.App;
+using Core.Extensions;
 
-namespace ReduxNET.Posts
+namespace Core.Domain.Posts
 {
     public static class PostsInteractor
     {

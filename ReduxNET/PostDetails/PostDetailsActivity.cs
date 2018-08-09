@@ -2,10 +2,10 @@
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Widget;
-using ReduxNET.Posts;
 using System;
-using System.Linq;
 using System.Reactive.Linq;
+using Core.Domain.Posts;
+using Core.Selectors;
 
 namespace ReduxNET.PostDetails
 {
@@ -24,10 +24,11 @@ namespace ReduxNET.PostDetails
             _title = FindViewById<TextView>(Resource.Id.title);
             _body = FindViewById<TextView>(Resource.Id.msg);
 
-            using (var sub = App.App.Store.DistinctUntilChanged(state => state.PostsState.SelectedPostId)
-                 .Select(Selectors.Selectors.GetPostById)
-                 .Select(p => p)
-                 .Subscribe(p => Render(p))) { }
+            using (Core.Domain.App.App.Store.DistinctUntilChanged(state => state.PostsState.SelectedPostId)
+                .Select(Selectors.GetPostById)
+                .Select(p => p)
+                .Subscribe(Render))
+            { }
         }
 
         private void Render(Post p)

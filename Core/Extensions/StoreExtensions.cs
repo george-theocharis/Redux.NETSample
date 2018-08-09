@@ -1,7 +1,7 @@
 ﻿using System;
 using Redux;
 
-namespace ReduxNET.Extensions
+namespace Core.Extensions
 {
     public delegate void AsyncActionsCreator<in TState>(Dispatcher dispatcher, Func<TState> getState);
 
@@ -9,7 +9,7 @@ namespace ReduxNET.Extensions
     {
         public static void Dispatch<TState>(this IStore<TState> store, AsyncActionsCreator<TState> actionsCreator)
         {
-             actionsCreator(store.Dispatch, store.GetState);
+            actionsCreator(store.Dispatch, store.GetState);
         }
     }
 }

@@ -1,9 +1,9 @@
-﻿using ReduxNET.Posts;
-using Refit;
+﻿using Refit;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core.Domain.Posts;
 
-namespace ReduxNET.Network
+namespace Core.Network
 {
     public interface IFakeApi
     {

@@ -1,13 +1,16 @@
-﻿namespace Redux.App
+﻿using Core.Domain.Posts;
+using Redux;
+
+namespace Core.Domain.App
 {
     public static class AppReducer 
     {
         public static AppState Reduce(AppState previous, IAction action)
         {
             return new AppState
-            {
-                PostsState = PostsReducer.Reduce(previous.PostsState, action)
-            };
+            (
+                 PostsReducer.Reduce(previous.PostsState, action)
+            );
         }
     }
 }

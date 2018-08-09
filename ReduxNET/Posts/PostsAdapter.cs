@@ -4,13 +4,14 @@ using System.Reactive.Linq;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
-using ReduxNET.Actions;
+using Core.ActionCreators;
+using Core.Domain.Posts;
 
 namespace ReduxNET.Posts
 {
     public class PostsAdapter : RecyclerView.Adapter
     {
-        public ImmutableList<Post> Items { get; private set; }
+        private ImmutableList<Post> Items { get; set; }
 
         public PostsAdapter()
             =>  Items = ImmutableList<Post>.Empty;
@@ -32,10 +33,9 @@ namespace ReduxNET.Posts
 
     internal class PostViewHolder : RecyclerView.ViewHolder
     {
-        public TextView Title { get; set; }
-        public TextView Body { get; set; }
-
-        public Post Post { get; private set; }
+        private TextView Title { get; }
+        private TextView Body { get; }
+        private Post Post { get; set; }
 
         public PostViewHolder(View itemView) : base(itemView)
         {
@@ -43,12 +43,11 @@ namespace ReduxNET.Posts
             Body = ItemView.FindViewById<TextView>(Resource.Id.msg);
 
             Observable.FromEventPattern(itemView, "Click")
-                .Subscribe(_ => App.App.Store.Dispatch(new PostSelected(Post.Id)));
+                      .Subscribe(_ => Core.Domain.App.App.Store.Dispatch(PostsActionsCreator.SelectPost(Post.Id)));
         }
 
         internal void Bind(Post post)
         {
-            Post = post;
             Title.Text = post.Title;
             Body.Text = post.Body;
         }

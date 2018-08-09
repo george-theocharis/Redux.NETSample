@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace ReduxNET.Posts
+namespace Core.Domain.Posts
 {
     public class Post
     {

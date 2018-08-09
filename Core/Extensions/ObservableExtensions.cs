@@ -3,7 +3,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
 
-namespace ReduxNET.Extensions
+namespace Core.Extensions
 {
     public static class ObservableExtensions
     {
