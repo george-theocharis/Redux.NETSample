@@ -5,7 +5,7 @@ using Redux;
 
 namespace Core.Domain.Posts
 {
-    internal class PostsReducer
+    internal static class PostsReducer
     {
         internal static PostsState Reduce(PostsState state, IAction action)
         {
