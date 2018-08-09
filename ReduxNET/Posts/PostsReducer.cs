@@ -1,6 +1,7 @@
 ﻿using ReduxNET.Actions;
 using ReduxNET.Posts;
 using System.Collections.Immutable;
+using ReduxNET.Network;
 
 namespace Redux
 {
@@ -10,14 +11,14 @@ namespace Redux
         {
             switch(action)
             {
-                case FetchPosts _:
-                    return state.With(Loading: true);
+                case FetchPosts asyncAction when asyncAction.Status == Status.Pending:
+                    return state.With(true);
 
-                case PostsFetched result:
-                    return state.With(Loading: false, Posts: ImmutableList.CreateRange(result.Posts), Error: string.Empty);
+                case FetchPosts asyncAction when asyncAction.Status == Status.Success:
+                    return state.With(false, asyncAction.Posts, Error: string.Empty);
 
-                case PostsFetchFailed error:
-                    return state.With(Loading: false, Posts: ImmutableList<Post>.Empty, Error: error.Message);
+                case FetchPosts asyncAction when asyncAction.Status == Status.Failure:
+                    return state.With(false, ImmutableList<Post>.Empty, Error: asyncAction.Reason);
 
                 case PostSelected post:
                     return state.With(SelectedPostId: post.Id);

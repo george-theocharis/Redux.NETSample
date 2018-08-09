@@ -8,6 +8,7 @@ namespace Redux
         public PostsState()
         {
             Posts = ImmutableList<Post>.Empty;
+            FirstTime = true;
         }
 
         private PostsState(bool loading, ImmutableList<Post> posts, int selectedPostId, string searchQuery, string error)
@@ -17,6 +18,7 @@ namespace Redux
             SelectedPostId = selectedPostId;
             SearchQuery = searchQuery;
             Error = error;
+            FirstTime = false;
         }
 
         public PostsState With(bool? Loading = null, ImmutableList<Post> Posts = null, int? SelectedPostId = null, string SearchQuery = null, string Error = null)
@@ -26,7 +28,7 @@ namespace Redux
                    Posts ?? this.Posts,
                    SelectedPostId ?? this.SelectedPostId,
                    SearchQuery ?? this.SearchQuery,
-                   Error ?? this.Error
+                   Error
                );
 
 
@@ -35,5 +37,6 @@ namespace Redux
         public int SelectedPostId { get; }
         public string SearchQuery { get; }
         public string Error { get; }
+        public bool FirstTime { get; }
     }
 }

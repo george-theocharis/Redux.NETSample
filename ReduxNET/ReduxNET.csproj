@@ -63,14 +63,14 @@
   <ItemGroup>
     <Compile Include="ActionCreators\PostsActionsCreator.cs" />
     <Compile Include="Actions\FetchPosts.cs" />
-    <Compile Include="Actions\PostsFetched.cs" />
-    <Compile Include="Actions\PostsFetchFailed.cs" />
     <Compile Include="Actions\SearchPosts.cs" />
     <Compile Include="App\App.cs" />
     <Compile Include="App\AppReducer.cs" />
     <Compile Include="App\AppState.cs" />
-    <Compile Include="Network\IFakeApi.cs" />
     <Compile Include="Extensions\ObservableExtensions.cs" />
+    <Compile Include="Network\IAsyncAction.cs" />
+    <Compile Include="Network\IFakeApi.cs" />
+    <Compile Include="Extensions\DisposableExtensions.cs" />
     <Compile Include="PostDetails\PostDetailsActivity.cs" />
     <Compile Include="Actions\PostSelected.cs" />
     <Compile Include="Posts\Post.cs" />

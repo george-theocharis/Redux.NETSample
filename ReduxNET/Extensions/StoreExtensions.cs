@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Redux;
 
-namespace ReduxNET
+namespace ReduxNET.Extensions
 {
-    public delegate Task AsyncActionsCreator<TState>(Dispatcher dispatcher, Func<TState> getState);
+    public delegate void AsyncActionsCreator<in TState>(Dispatcher dispatcher, Func<TState> getState);
 
     public static class StoreExtensions
     {
-        public static Task Dispatch<TState>(this IStore<TState> store, AsyncActionsCreator<TState> actionsCreator)
+        public static void Dispatch<TState>(this IStore<TState> store, AsyncActionsCreator<TState> actionsCreator)
         {
-            return actionsCreator(store.Dispatch, store.GetState);
+             actionsCreator(store.Dispatch, store.GetState);
         }
     }
 }

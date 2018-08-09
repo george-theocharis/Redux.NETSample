@@ -7,7 +7,6 @@ using Android.Views;
 using System.Reactive.Linq;
 using Android.Support.V7.Widget;
 using ReduxNET.Posts;
-using ReduxNET.Actions;
 using Android.Support.Transitions;
 using Android.Support.Constraints;
 using ReduxNET.PostDetails;
@@ -15,11 +14,9 @@ using Android.Support.Design.Widget;
 using System.Reactive.Disposables;
 using ReduxNET.Extensions;
 using ReduxNET.ActionCreators;
-using System.Linq;
 using System.Collections.Immutable;
 using System.Threading;
 using System.Reactive.Concurrency;
-using System.Collections.Generic;
 
 namespace ReduxNET
 {
@@ -32,9 +29,9 @@ namespace ReduxNET
         private Android.Widget.SearchView _search;
         private RecyclerView _posts;
         private PostsAdapter _adapter;
-
-        private CompositeDisposable _disposables = new CompositeDisposable();
         private Snackbar _snackbar;
+
+        private CompositeDisposable Disposables { get; } = new CompositeDisposable();
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -42,7 +39,7 @@ namespace ReduxNET
 
             SetContentView(Resource.Layout.activity_main);
 
-            Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
+            var toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
             _fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
@@ -61,96 +58,92 @@ namespace ReduxNET
         protected override void OnStart()
         {
             base.OnStart();
-            SetupSubscriptions();
             SetupEventHandlers();
-            Start();
+            SetupSubscriptions();
         }
-
-        private void Start()
+        
+        protected override void OnStop()
         {
-            if (_adapter.ItemCount == 0)
-                App.App.Store.Dispatch(PostsActionsCreator.Fetch());
+            base.OnStop();
+            Disposables.Clear();
         }
 
         private void SetupEventHandlers()
         {
             Observable.FromEventPattern(_fab, "Click")
-                      .Throttle(TimeSpan.FromMilliseconds(200))
-                      .Subscribe(e =>
-                      {
-                          if (_adapter.ItemCount > 0)
-                              App.App.Store.Dispatch(PostsActionsCreator.PostsFetched(new List<Post>()));
-                          else
-                              App.App.Store.Dispatch(PostsActionsCreator.Fetch());
-                      })
-                      .DisposeWith(_disposables);
+                .Subscribe(e => App.App.Store.Dispatch(PostsActionsCreator.Fetch()))
+                .DisposeWith(Disposables);
 
             Observable.FromEventPattern(_search, "QueryTextChange")
-                      .Subscribe(e => App.App.Store.Dispatch(PostsActionsCreator.SearchPosts(_search.Query)))
-                      .DisposeWith(_disposables);
+                .Select(e => e.EventArgs.ToString())
+                .DistinctUntilChanged()
+                .Subscribe(e => App.App.Store.Dispatch(PostsActionsCreator.SearchPosts(_search.Query)))
+                .DisposeWith(Disposables);
         }
 
         private void SetupSubscriptions()
         {
             App.App.Store
+                .Where(state => state.PostsState.FirstTime)
+                .ManageThreading()
+                .Subscribe(_ => App.App.Store.Dispatch(PostsActionsCreator.Fetch()))
+                .DisposeWith(Disposables);
+
+            App.App.Store
+                .Select(state => state.PostsState.Loading)
+                .DistinctUntilChanged()
+                .ManageThreading()
+                .Subscribe(Render)
+                .DisposeWith(Disposables);
+
+            App.App.Store
                 .Select(Selectors.Selectors.SearchPosts)
                 .DistinctUntilChanged()
-                .SubscribeOn(TaskPoolScheduler.Default)
-                .ObserveOn(SynchronizationContext.Current)
-                .Subscribe(list => Render(list))
-                .DisposeWith(_disposables);
+                .ManageThreading()
+                .Subscribe(Render)
+                .DisposeWith(Disposables);
 
             App.App.Store
                 .Select(state => state.PostsState.SelectedPostId)
                 .DistinctUntilChanged()
                 .Skip(1)
-                .SubscribeOn(TaskPoolScheduler.Default)
-                .ObserveOn(SynchronizationContext.Current)
-                .Subscribe(id => Render(id))
-                .DisposeWith(_disposables);
+                .ManageThreading()
+                .Subscribe(id => Render())
+                .DisposeWith(Disposables);
 
             App.App.Store
-              .Select(state => state.PostsState.Error)
-              .DistinctUntilChanged()
-              .SubscribeOn(TaskPoolScheduler.Default)
-              .ObserveOn(SynchronizationContext.Current)
-              .Subscribe(error => Render(error))
-              .DisposeWith(_disposables);
+                .Select(state => state.PostsState.Error)
+                .DistinctUntilChanged()
+                .ManageThreading()
+                .Subscribe(Render)
+                .DisposeWith(Disposables);
         }
 
-        protected override void OnStop()
-        {
-            base.OnStop();
-            _disposables.Clear();
-        }
-
-        private void Render(ImmutableList<Post> list)
+        private void Render(bool loading)
         {
             TransitionManager.BeginDelayedTransition(_container);
-            _loading.Visibility = ViewStates.Gone;
-            _posts.Visibility = ViewStates.Visible;
-
-            _adapter.UpdateItems(list);
+            _loading.Visibility = loading ? ViewStates.Visible : ViewStates.Gone;
+            _posts.Visibility = !loading ? ViewStates.Visible : ViewStates.Gone;
         }
 
-        private void Render(int selectedPostId)
-            => StartActivity(new Android.Content.Intent(this, typeof(PostDetailsActivity)));
+        private void Render(ImmutableList<Post> list) => _adapter.UpdateItems(list);
 
         private void Render(string error)
         {
-            if(string.IsNullOrEmpty(error))
+            if (string.IsNullOrEmpty(error))
             {
                 if (_snackbar == null) return;
                 if (_snackbar.IsShownOrQueued) _snackbar.Dismiss();
                 return;
             }
-          
+
             if (_snackbar == null)
                 _snackbar = Snackbar.Make(_container, error, Snackbar.LengthIndefinite);
             else _snackbar.SetText(error);
 
             _snackbar.Show();
         }
+
+        private void Render() => StartActivity(new Android.Content.Intent(this, typeof(PostDetailsActivity)));
     }
 }
-
