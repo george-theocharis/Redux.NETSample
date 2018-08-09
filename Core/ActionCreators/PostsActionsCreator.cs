@@ -24,6 +24,7 @@ namespace Core.ActionCreators
         public static IAction SearchPosts(string query) => new SearchPosts(query);
 
         public static IAction SelectPost(int id) => new SelectPost(id);
+        public static IAction DeselectPost => new SelectPost(0);
 
         public static AsyncActionsCreator<AppState> Fetch()
         {

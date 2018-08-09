@@ -28,8 +28,7 @@ namespace Core.Domain.Posts
 
         public static IObservable<int> SelectedPostId => App.App.Store
                                                                 .Select(state => state.PostsState.SelectedPostId)
-                                                                .DistinctUntilChanged()
-                                                                .Skip(1)
+                                                                .Where(id => id > 0)
                                                                 .ManageThreading();
 
         public static IObservable<string> Error => App.App.Store
