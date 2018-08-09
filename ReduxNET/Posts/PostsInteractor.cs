@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Reactive;
 using System.Reactive.Linq;
 using Redux.App;
+using ReduxNET.ActionCreators;
 using ReduxNET.Extensions;
 
 namespace ReduxNET.Posts
@@ -10,6 +12,7 @@ namespace ReduxNET.Posts
     {
         public static IObservable<AppState> InitialFetch => App.App.Store
                                                                     .Where(state => state.PostsState.FirstTime)
+                                                                    .Do(_ => App.App.Store.Dispatch(PostsActionsCreator.Fetch()))
                                                                     .ManageThreading();
 
         public static IObservable<bool> Loading => App.App.Store

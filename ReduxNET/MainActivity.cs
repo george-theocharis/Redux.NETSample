@@ -84,7 +84,7 @@ namespace ReduxNET
         {
             PostsInteractor
                 .InitialFetch
-                .Subscribe(_ => App.App.Store.Dispatch(PostsActionsCreator.Fetch()))
+                .Subscribe()
                 .DisposeWith(Disposables);
 
             PostsInteractor
@@ -99,7 +99,7 @@ namespace ReduxNET
 
             PostsInteractor
                 .SelectedPostId
-                .Subscribe(id => Render())
+                .Subscribe(Render)
                 .DisposeWith(Disposables);
 
             PostsInteractor
@@ -137,6 +137,6 @@ namespace ReduxNET
             _snackbar.Show();
         }
 
-        private void Render() => StartActivity(new Android.Content.Intent(this, typeof(PostDetailsActivity)));
+        private void Render(int id) => StartActivity(new Android.Content.Intent(this, typeof(PostDetailsActivity)));
     }
 }
