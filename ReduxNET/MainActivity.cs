@@ -75,7 +75,8 @@ namespace ReduxNET
                 .DisposeWith(Disposables);
 
             Observable.FromEventPattern(_search, "QueryTextChange")
-                .Select(e => e.EventArgs.ToString())
+                .Merge(Observable.FromEventPattern(_search, "QueryTextSubmit"))
+                .Select(e => _search.Query)
                 .DistinctUntilChanged()
                 .Subscribe(e => App.App.Store.Dispatch(PostsActionsCreator.SearchPosts(_search.Query)))
                 .DisposeWith(Disposables);
@@ -83,38 +84,28 @@ namespace ReduxNET
 
         private void SetupSubscriptions()
         {
-            App.App.Store
-                .Where(state => state.PostsState.FirstTime)
-                .ManageThreading()
+            PostsInteractor
+                .InitialFetch
                 .Subscribe(_ => App.App.Store.Dispatch(PostsActionsCreator.Fetch()))
                 .DisposeWith(Disposables);
 
-            App.App.Store
-                .Select(state => state.PostsState.Loading)
-                .DistinctUntilChanged()
-                .ManageThreading()
+            PostsInteractor
+                .Loading
                 .Subscribe(Render)
                 .DisposeWith(Disposables);
 
-            App.App.Store
-                .Select(Selectors.Selectors.SearchPosts)
-                .DistinctUntilChanged()
-                .ManageThreading()
+            PostsInteractor
+                .Posts
                 .Subscribe(Render)
                 .DisposeWith(Disposables);
 
-            App.App.Store
-                .Select(state => state.PostsState.SelectedPostId)
-                .DistinctUntilChanged()
-                .Skip(1)
-                .ManageThreading()
+            PostsInteractor
+                .SelectedPostId
                 .Subscribe(id => Render())
                 .DisposeWith(Disposables);
 
-            App.App.Store
-                .Select(state => state.PostsState.Error)
-                .DistinctUntilChanged()
-                .ManageThreading()
+            PostsInteractor
+                .Error
                 .Subscribe(Render)
                 .DisposeWith(Disposables);
         }
@@ -126,7 +117,11 @@ namespace ReduxNET
             _posts.Visibility = !loading ? ViewStates.Visible : ViewStates.Gone;
         }
 
-        private void Render(ImmutableList<Post> list) => _adapter.UpdateItems(list);
+        private void Render(ImmutableList<Post> list)
+        {
+            TransitionManager.BeginDelayedTransition(_container, new ChangeBounds());
+            _adapter.UpdateItems(list);
+        }
 
         private void Render(string error)
         {
