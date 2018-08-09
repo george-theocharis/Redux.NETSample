@@ -19,7 +19,7 @@ namespace ReduxNET.Posts
         public override int ItemCount => Items.Count;
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
-         =>   (holder as PostViewHolder)?.Bind(Items[position]);
+         =>  (holder as PostViewHolder)?.Bind(Items[position]);
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
             => new PostViewHolder(LayoutInflater.From(parent.Context).Inflate(Resource.Layout.li_post, parent, false));
@@ -50,6 +50,7 @@ namespace ReduxNET.Posts
         {
             Title.Text = post.Title;
             Body.Text = post.Body;
+            Post = post;
         }
     }
 }
