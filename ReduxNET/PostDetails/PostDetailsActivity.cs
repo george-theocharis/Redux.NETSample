@@ -4,6 +4,7 @@ using Android.Support.V7.App;
 using Android.Widget;
 using System;
 using System.Reactive.Linq;
+using Core.ActionCreators;
 using Core.Domain.Posts;
 using Core.Selectors;
 
@@ -29,6 +30,13 @@ namespace ReduxNET.PostDetails
                 .Select(p => p)
                 .Subscribe(Render))
             { }
+        }
+
+
+        public override void OnBackPressed()
+        {
+            Core.Domain.App.App.Store.Dispatch(PostsActionsCreator.DeselectPost);
+            base.OnBackPressed();
         }
 
         private void Render(Post p)
