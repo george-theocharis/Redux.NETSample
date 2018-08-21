@@ -1,4 +1,4 @@
-﻿namespace Core.Domain.App
+﻿namespace Core.Domain
 {
     public interface ISubscribeView
     {

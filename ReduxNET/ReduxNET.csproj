@@ -51,9 +51,6 @@
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DomainF">
-      <HintPath>..\Domain\bin\Debug\netstandard2.0\DomainF.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
@@ -142,6 +139,10 @@
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{eba3c1b5-3863-40ad-b2e9-d0f0e6e37e06}</Project>
       <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Domain\Redux.Core.fsproj">
+      <Project>{fcec4475-24fe-465f-a7b5-5796886c3bed}</Project>
+      <Name>Redux.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

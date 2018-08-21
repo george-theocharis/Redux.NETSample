@@ -11,6 +11,7 @@ using Android.Views;
 using Android.Widget;
 using Core.Domain.Posts;
 using Core.Extensions;
+using Redux.Core;
 using ReduxNET.PostDetails;
 
 namespace ReduxNET.Posts
@@ -95,7 +96,7 @@ namespace ReduxNET.Posts
             _posts.Visibility = !loading ? ViewStates.Visible : ViewStates.Gone;
         }
 
-        private void Render(ImmutableList<DomainF.Posts.Post> list)
+        private void Render(ImmutableList<Post> list)
         {
             TransitionManager.BeginDelayedTransition(_container, new ChangeBounds());
             _adapter.UpdateItems(list);

@@ -11,6 +11,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Domain\DomainF.fsproj" />
+    <ProjectReference Include="..\Domain\Redux.Core.fsproj" />
   </ItemGroup>
 </Project>

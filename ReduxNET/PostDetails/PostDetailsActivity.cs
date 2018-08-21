@@ -4,9 +4,8 @@ using Android.Support.V7.App;
 using Android.Widget;
 using System;
 using System.Reactive.Linq;
-using Core.ActionCreators;
-using Core.Domain.Posts;
 using Core.Selectors;
+using Redux.Core;
 
 namespace ReduxNET.PostDetails
 {
@@ -25,7 +24,7 @@ namespace ReduxNET.PostDetails
             _title = FindViewById<TextView>(Resource.Id.title);
             _body = FindViewById<TextView>(Resource.Id.msg);
 
-            using (Core.Domain.App.App.Store.DistinctUntilChanged(state => state.PostsState.SelectedPostId)
+            using (Core.Domain.App.Store.DistinctUntilChanged(state => state.PostsState.SelectedPostId)
                 .Select(Selectors.GetPostById)
                 .Select(p => p)
                 .Subscribe(Render))
@@ -35,11 +34,11 @@ namespace ReduxNET.PostDetails
 
         public override void OnBackPressed()
         {
-            Core.Domain.App.App.Store.Dispatch(PostsActionsCreator.DeselectPost);
+            Core.Domain.App.Store.Dispatch(ActionCreators.PostSelected(0));
             base.OnBackPressed();
         }
 
-        private void Render(DomainF.Posts.Post p)
+        private void Render(Post p)
         {
             _title.Text = p.Title;
             _body.Text = p.Body;

@@ -1,8 +1,7 @@
-﻿namespace DomainF
+﻿namespace Redux.Core
 
 module Actions = 
     open System
-    open Posts
     open Redux
     
     type Action =
@@ -12,3 +11,13 @@ module Actions =
         | SelectPost of Id: int
         | SearchPost of Query: string
         interface IAction
+
+open Actions
+
+ module ActionCreators = 
+    let FetchPosts = Action.PostsPending
+    let PostsFetched posts = Action.PostsResult(posts)
+    let PostsFailed error = Action.PostsFailure(error)
+    let PostSelected id = Action.SelectPost(id)
+    let QueryChanged query = Action.SearchPost(query)
+

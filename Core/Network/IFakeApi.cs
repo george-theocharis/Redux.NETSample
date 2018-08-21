@@ -1,13 +1,14 @@
 ﻿using Refit;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DomainF;
+using Redux.Core;
+
 
 namespace Core.Network
 {
     public interface IFakeApi
     {
         [Get("/posts")]
-        Task<ApiResponse<List<Posts.Post>>> GetPosts();
+        Task<ApiResponse<IEnumerable<Post>>> GetPosts();
     }
 }

@@ -1,8 +1,7 @@
 ﻿module Reducers 
 
-open DomainF.Actions
-open DomainF.Posts
-open DomainF.App
+open Redux.Core
+open Actions
 open Redux
 
     
@@ -15,6 +14,4 @@ open Redux
          | SearchPost query -> { state with Query = query; }
 
   let AppReduce (state: AppState, action: IAction) : AppState = { state with PostsState = PostsReduce(state.PostsState, action); }
-
-   let Reduce = AppReduce
 

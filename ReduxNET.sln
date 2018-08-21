@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReduxNet", "ReduxNet.iOS\ReduxNet\ReduxNet.csproj", "{E265D2ED-29E4-4BE0-AF61-FCBF384C8D3B}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "DomainF", "Domain\DomainF.fsproj", "{FCEC4475-24FE-465F-A7B5-5796886C3BED}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Redux.Core", "Domain\Redux.Core.fsproj", "{FCEC4475-24FE-465F-A7B5-5796886C3BED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

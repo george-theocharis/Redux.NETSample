@@ -1,6 +1,4 @@
-﻿using Core.Domain.App;
-
-namespace Core.Domain.Posts
+﻿namespace Core.Domain.Posts
 {
     public interface IPostsView : ISubscribeView
     {
