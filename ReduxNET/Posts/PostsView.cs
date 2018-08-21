@@ -95,7 +95,7 @@ namespace ReduxNET.Posts
             _posts.Visibility = !loading ? ViewStates.Visible : ViewStates.Gone;
         }
 
-        private void Render(ImmutableList<Post> list)
+        private void Render(ImmutableList<DomainF.Posts.Post> list)
         {
             TransitionManager.BeginDelayedTransition(_container, new ChangeBounds());
             _adapter.UpdateItems(list);

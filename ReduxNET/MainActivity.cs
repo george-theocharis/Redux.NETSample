@@ -8,6 +8,7 @@ using System.Reactive.Disposables;
 using Android.Widget;
 using Core.ActionCreators;
 using Core.Extensions;
+using DomainF;
 
 namespace ReduxNET
 {
@@ -54,7 +55,7 @@ namespace ReduxNET
                 .Merge(Observable.FromEventPattern(_search, "QueryTextSubmit"))
                 .Select(e => _search.Query)
                 .DistinctUntilChanged()
-                .Subscribe(e => Core.Domain.App.App.Store.Dispatch(PostsActionsCreator.SearchPosts(_search.Query)))
+                .Subscribe(query => Core.Domain.App.App.Store.Dispatch(Actions.Action.NewSearchPost(query)))
                 .DisposeWith(Disposables);
         }
     }

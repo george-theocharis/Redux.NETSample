@@ -39,7 +39,7 @@ namespace ReduxNET.PostDetails
             base.OnBackPressed();
         }
 
-        private void Render(Post p)
+        private void Render(DomainF.Posts.Post p)
         {
             _title.Text = p.Title;
             _body.Text = p.Body;

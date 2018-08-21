@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Immutable;
 using System.Linq;
-using Core.Domain.App;
-using Core.Domain.Posts;
+using DomainF;
+using App = DomainF.App;
 
 namespace Core.Selectors
 {
     public static class Selectors
     {
-        public static Func<AppState, Post> GetPostById
+        public static Func<App.AppState, Posts.Post> GetPostById
             => x => x.PostsState.Posts.SingleOrDefault(p => p.Id.Equals(x.PostsState.SelectedPostId));
 
-        public static Func<AppState, ImmutableList<Post>> SearchPosts
-            => x => string.IsNullOrEmpty(x.PostsState.SearchQuery) ? x.PostsState.Posts : x.PostsState.Posts.Where(p => 
-                p.Title.ToLower().Contains(x.PostsState.SearchQuery.ToLower()) || p.Body.ToLower().Contains(x.PostsState.SearchQuery.ToLower())
+        public static Func<App.AppState, ImmutableList<Posts.Post>> SearchPosts
+            => x => string.IsNullOrEmpty(x.PostsState.Query) ? x.PostsState.Posts.ToImmutableList() : x.PostsState.Posts.Where(p => 
+                p.Title.ToLower().Contains(x.PostsState.Query.ToLower()) || p.Body.ToLower().Contains(x.PostsState.Query.ToLower())
             ).ToImmutableList();
     }
 }

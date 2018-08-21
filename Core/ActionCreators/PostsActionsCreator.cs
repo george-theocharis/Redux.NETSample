@@ -1,37 +1,34 @@
-﻿using Redux;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
-using Core.Actions;
-using Core.Domain.App;
-using Core.Domain.Posts;
 using Core.Extensions;
+using DomainF;
+using Redux;
 
 namespace Core.ActionCreators
 {
     public static class PostsActionsCreator
     {
-        private static IAction FetchPosts => new FetchPosts(Status.Pending);
+        private static IAction FetchPosts => Actions.Action.PostsPending;
 
-        private static IAction PostsFetched(IEnumerable<Post> posts) => new FetchPosts(Status.Success, posts);
+        private static IAction PostsFetched(IEnumerable<Posts.Post> posts) =>
+            Actions.Action.NewPostsResult(posts.ToArray());
 
         private static IAction PostsFetchFailed(HttpStatusCode statusCode, string reasonPhrase) =>
-            new FetchPosts(Status.Failure, statusCode, reasonPhrase);
+            Actions.Action.NewPostsFailure(new Exception(reasonPhrase));
 
-        public static IAction SearchPosts(string query) => new SearchPosts(query);
+        public static IAction SelectPost(int id) => Actions.Action.NewSelectPost(id);
+        public static IAction DeselectPost => Actions.Action.NewSelectPost(0);
 
-        public static IAction SelectPost(int id) => new SelectPost(id);
-        public static IAction DeselectPost => new SelectPost(0);
-
-        public static AsyncActionsCreator<AppState> Fetch()
+        public static AsyncActionsCreator<App.AppState> Fetch()
         {
             return (dispatch, getState) =>
                 Observable.Return(dispatch(FetchPosts))
                     .StartWith()
-                    .SelectMany(async _ => await Task.Run(async () => await App.Api.GetPosts()))
+                    .SelectMany(async _ => await Domain.App.App.Api.GetPosts())
                     .Where(response => response.IsSuccessStatusCode)
                     .Select(response => response.Content)
                     .SubscribeOn(TaskPoolScheduler.Default)

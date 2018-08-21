@@ -2,7 +2,6 @@
 using System.Collections.Immutable;
 using System.Reactive.Linq;
 using Core.ActionCreators;
-using Core.Domain.App;
 using Core.Extensions;
 
 namespace Core.Domain.Posts
@@ -11,8 +10,9 @@ namespace Core.Domain.Posts
 
     public static class PostsInteractor
     {
-        public static IObservable<AppState> InitialFetch => App.App.Store
-                                                                    .Where(state => state.PostsState.FirstTime)
+        public static IObservable<DomainF.App.AppState> InitialFetch => App.App.Store
+                                                                    .Where(state => state.PostsState.Posts.Length == 0)
+                                                                    .DistinctUntilChanged()
                                                                     .Do(_ => App.App.Store.Dispatch(PostsActionsCreator.Fetch()))
                                                                     .ManageThreading();
 
@@ -21,7 +21,7 @@ namespace Core.Domain.Posts
                                                           .DistinctUntilChanged()
                                                           .ManageThreading();
 
-        public static IObservable<ImmutableList<Post>> Posts => App.App.Store
+        public static IObservable<ImmutableList<DomainF.Posts.Post>> Posts => App.App.Store
                                                                         .Select(Selectors.Selectors.SearchPosts)
                                                                         .DistinctUntilChanged()
                                                                         .ManageThreading();
@@ -32,7 +32,7 @@ namespace Core.Domain.Posts
                                                                 .ManageThreading();
 
         public static IObservable<string> Error => App.App.Store
-                                                          .Select(state => state.PostsState.Error)
+                                                          .Select(state => state.PostsState.Error?.Message)
                                                           .DistinctUntilChanged()
                                                           .ManageThreading();
     }
